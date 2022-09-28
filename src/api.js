@@ -1,16 +1,28 @@
+// imports
 const express = require("express");
-const serverless = require("serverless-http");
+const morgan = require('morgan')
 
+// settions
 const app = express();
-const router = express.Router();
+app.set('port', process.env.port || 3000)
 
-router.get("/", (req, res) => {
+// middlewares
+app.use(morgan('dev'))
+app.use(express.json())
+
+// routes
+app.get('/', (req, res) => {
   res.json({
-    hello: "hi!"
-  });
-});
+    message: 'success'
+  })
+})
 
-app.use(`/.netlify/functions/api`, router);
+app.use('/.netlify/functions/api', require('./routes'))
 
-module.exports = app;
-module.exports.handler = serverless(app);
+const serverless = require("serverless-http");
+module.exports = app
+module.exports.handler = serverless(app)
+
+app.listen(app.get('port'), () => {
+  console.log(`Server on port ${app.get('port')}`)
+})
