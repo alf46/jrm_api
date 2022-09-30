@@ -13,7 +13,7 @@ app.use(express.json())
 // routes
 app.get('/', (req, res) => {
   res.json({
-    message: 'success'
+    env: process.env.NODE_ENV
   })
 })
 
